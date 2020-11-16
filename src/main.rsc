@@ -132,6 +132,7 @@ void main(loc projectLocation) {
 	tuple[int simple, int moderate, int complex, int unstable] interfacingPerUnit = <0, 0, 0, 0>;
 	
 	int totalComplexity = 0;
+	int methodLines = 0;
 	
 	for (method <- projectMethods) {
 
@@ -141,6 +142,7 @@ void main(loc projectLocation) {
 		sizePerUnit = addStats(sizePerUnit, catagorizeUnitSize(stats.lines));
 		interfacingPerUnit = addStats(interfacingPerUnit, catagorizeUnitInterfacing(stats.parameters, stats.lines));
 		
+		methodLines += stats.lines;
 		unitStats[method.src] = stats;
 		totalComplexity += stats.complexity;
 	}
@@ -149,9 +151,9 @@ void main(loc projectLocation) {
 	int testLOC = getTestLOC(testFiles);
 	int assertCount = size(getAssertCount(asts));
 	
-	tuple[real simple, real moderate, real complex, real unstable] percentagesComplexity = metricPercentages(complexityPerUnit,totalLinesOfCode);
-	tuple[real simple, real moderate, real complex, real unstable] percentagesVolume = metricPercentages(sizePerUnit, totalLinesOfCode);
-	tuple[real simple, real moderate, real complex, real unstable] percentagesInterfacing = metricPercentages(interfacingPerUnit, totalLinesOfCode);
+	tuple[real simple, real moderate, real complex, real unstable] percentagesComplexity = metricPercentages(complexityPerUnit,methodLines);
+	tuple[real simple, real moderate, real complex, real unstable] percentagesVolume = metricPercentages(sizePerUnit, methodLines);
+	tuple[real simple, real moderate, real complex, real unstable] percentagesInterfacing = metricPercentages(interfacingPerUnit, methodLines);
 						
 	println("
 	
@@ -224,13 +226,31 @@ void main(loc projectLocation) {
 	
 	");
 	
-	println("Project wide Analysability ranking: <rankAnalysability(ranks.volume, ranks.duplication, ranks.unitVolume)>");
-	println("Project wide Changeability ranking: <rankChangeability(ranks.complexity, ranks.duplication)>");
-	println("Project wide Stability ranking: <rankStability(ranks.unitTest)>");
-	println("Project wide Testability ranking: <rankTestability(ranks.complexity, ranks.unitVolume, ranks.unitTest)>");
+	str analysabilityRank = rankAnalysability(ranks.volume, ranks.duplication, ranks.unitVolume);
+	str changeabilityRank = rankChangeability(ranks.complexity, ranks.duplication);
+	str stabilityRank = rankStability(ranks.unitTest);
+	str testabilityRank = rankTestability(ranks.complexity, ranks.unitVolume, ranks.unitTest);
+	
+	println("Project wide Analysability ranking: <analysabilityRank>");
+	println("Project wide Changeability ranking: <changeabilityRank>");
+	println("Project wide Stability ranking: <stabilityRank>");
+	println("Project wide Testability ranking: <testabilityRank>");
+	
+	str maintainabilityRank = rankMaintainability(analysabilityRank, changeabilityRank, stabilityRank, testabilityRank);
+	
+	println("Maintainability rank: <maintainabilityRank>");
 	
 }
 
-void makeReport(){
+void makeReportSmall(){
 	println(benchmark( ("Smallsql" : void() {main(|project://smallsql0.21_src|);})));
+}
+
+void makeReportBig(){
+	println(benchmark( ("Smallsql" : void() {main(|project://hsqldb-2.3.1|);})));
+}
+
+void makeReportAll(){
+	makeReportSmall();
+	makeReportBig();
 }

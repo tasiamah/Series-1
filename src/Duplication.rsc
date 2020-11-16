@@ -53,9 +53,7 @@ int codeDuplication(M3 model){
 			}				
 		}
 	}
-	
-	iprintln(duplicateBlocks);
-	
+		
 	set[int] duplicatedLines = {};
 	
 	for (block <- duplicateBlocks) {

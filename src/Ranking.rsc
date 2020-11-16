@@ -155,3 +155,13 @@ str rankChangeability(str complexity, str dup){
 	int grade = floor((gradeComp + gradeDup) / 2.0);
 	return gradeToRank(grade);
 }
+
+str rankMaintainability(str analysability, str changeability, str stability, str testability){
+	int gradeAnalysability = rankToGrade(analysability);
+	int gradeChangeability = rankToGrade(changeability);
+	int gradeTestability = rankToGrade(testability);
+	int gradeStability = rankToGrade(stability);
+	
+	int grade = floor((gradeAnalysability + gradeChangeability + gradeTestability + gradeStability) / 4.0);
+	return gradeToRank(grade);
+}
