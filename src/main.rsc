@@ -151,7 +151,7 @@ void main(loc projectLocation) {
 	int testLOC = getTestLOC(testFiles);
 	int assertCount = size(getAssertCount(asts));
 	
-	tuple[real simple, real moderate, real complex, real unstable] percentagesComplexity = metricPercentages(complexityPerUnit,methodLines);
+	tuple[real simple, real moderate, real complex, real unstable] percentagesComplexity = metricPercentages(complexityPerUnit, methodLines);
 	tuple[real simple, real moderate, real complex, real unstable] percentagesVolume = metricPercentages(sizePerUnit, methodLines);
 	tuple[real simple, real moderate, real complex, real unstable] percentagesInterfacing = metricPercentages(interfacingPerUnit, methodLines);
 						

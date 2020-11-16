@@ -36,9 +36,12 @@ int codeDuplication(M3 model){
 	list[int] duplicateIndices = [];
 	for (line <- indexMap) duplicateIndices += indexMap[line];
 	duplicateIndices = sort(duplicateIndices);
-
-	// make map with lines : [ indices of these 6 lines ]
+	
+	// make map with lines : list of blocks
+	// all duplicate block lines are stored in duplicateBlocks, for speed
 	map[list[str] lines, list[list[int]] indeces] blockIndex = ();
+	
+	// contains all blocks of line that are duplicates
 	list[list[str]] duplicateBlocks = [];
 	
 	for (i <- duplicateIndices) {
@@ -53,7 +56,7 @@ int codeDuplication(M3 model){
 			}				
 		}
 	}
-		
+			
 	set[int] duplicatedLines = {};
 	
 	for (block <- duplicateBlocks) {
